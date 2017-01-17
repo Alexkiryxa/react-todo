@@ -46,38 +46,29 @@ describe('Reducers', () => {
             expect(res[0]).toEqual(action.todo);
         });
 
-        it('should toggle completed and set/unset completedAt', () => {
+        it('should update todo', () => {
             let todos = [{
-                id: 1,
-                text: 'Walk the dog',
-                completed: false,
-                createdAt: 123,
-                completedAt: undefined
-            }, {
                 id: 2,
                 text: 'Walk the cat',
                 completed: true,
                 createdAt: 234,
                 completedAt: 345
             }];
-            let actionOnCompletedFalse = {
-                type: 'TOGGLE_TODO',
-                id: 1
+            let updates = {
+                completed: false,
+                completedAt: null
             };
-            let actionOnCompletedTrue = {
-                type: 'TOGGLE_TODO',
-                id: 2
+            let action = {
+                type: 'UPDATE_TODO',
+                id: todos[0].id,
+                updates
             };
-            let resOnCompletedFalse = reducers.todosReducer(df(todos), df(actionOnCompletedFalse));
-            let resOnCompletedTrue = reducers.todosReducer(df(todos), df(actionOnCompletedTrue));
+            let res = reducers.todosReducer(df(todos), df(action));
 
-            expect(resOnCompletedFalse[0].completed).toEqual(!todos[0].completed);
-            expect(resOnCompletedFalse[1].completed).toEqual(todos[1].completed);
-            expect(resOnCompletedFalse[0].completedAt).toBeA('number');
 
-            expect(resOnCompletedTrue[1].completed).toEqual(false);
-            expect(resOnCompletedTrue[0].completed).toEqual(todos[0].completed);
-            expect(resOnCompletedTrue[1].completedAt).toNotExist();
+            expect(res[0].completed).toEqual(updates.completed);
+            expect(res[0].completedAt).toEqual(updates.completedAt);
+            expect(res[0].text).toEqual(todos[0].text);
         });
 
         it('should add existing todos', () => {
