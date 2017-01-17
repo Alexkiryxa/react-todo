@@ -4,13 +4,20 @@ let {Provider} = require('react-redux');// Let childrens component to use the st
 let {Route, Router, IndexRoute, hashHistory} = require('react-router');
 
 let TodoApp = require('TodoApp');
-
 let actions = require('actions');
 let store = require('configureStore').configure();
+let TodoAPI = require('TodoAPI');
 
 store.subscribe(() => {
-    console.log('New state', store.getState());
+    let state = store.getState();
+
+    console.log('New state', state);
+
+    TodoAPI.setTodos(state.todos);
 });
+
+let initialTodos = TodoAPI.getTodos();
+store.dispatch(actions.addTodos(initialTodos));
 
 // Load foundation
 $(document).foundation();
